@@ -1,4 +1,4 @@
-# Dale
+# Dale!
 
 Quests. Una acción concreta por vez, sin explicaciones.
 
@@ -7,9 +7,9 @@ v0.1: sin cuentas, sin backend, sin red. Todo local, todo offline.
 **En vivo: https://dale-woad.vercel.app** — abrila en Safari y agregala a la pantalla de
 inicio. Ahí sí corre el service worker, así que funciona sin señal.
 
-> Se llamó Bolichap y después Arranque. La carpeta todavía se llama `Bolichap`;
-> renombrarla es un `mv` cuando no tengas el server corriendo. Las noches guardadas con
-> los nombres viejos se mudan solas.
+> Se llamó Bolichap y después Arranque. Las noches guardadas con esos nombres se mudan
+> solas al abrir la app. Los identificadores internos (repo, proyecto de Vercel, claves
+> de `localStorage`) son `dale` sin signo: el `!` es solo el nombre visible.
 
 ## Correrlo
 

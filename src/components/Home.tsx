@@ -10,7 +10,7 @@ export function Home({ onStart }: Props) {
       <div className="stage">
         <div>
           <h1 className="wordmark">
-            DALE<span className="wordmark__dot" />
+            DALE<span className="wordmark__bang">!</span>
           </h1>
           <p className="tagline">Quests</p>
         </div>

@@ -12,8 +12,8 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: ['apple-touch-icon.png'],
       manifest: {
-        name: 'Dale',
-        short_name: 'Dale',
+        name: 'Dale!',
+        short_name: 'Dale!',
         description: 'Quests.',
         lang: 'es-AR',
         dir: 'ltr',

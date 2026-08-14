@@ -149,14 +149,10 @@ button {
   text-align: center;
 }
 
-.wordmark__dot {
-  display: inline-block;
-  width: 0.16em;
-  height: 0.16em;
-  margin-left: 0.02em;
-  border-radius: 50%;
-  background: var(--accent-bright);
-  vertical-align: baseline;
+/* El signo hace de acento de la marca: es el único color de la pantalla. */
+.wordmark__bang {
+  margin-left: -0.02em;
+  color: var(--accent-bright);
 }
 
 .tagline {
