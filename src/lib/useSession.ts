@@ -5,6 +5,7 @@ import { pickQuest } from './questSelector';
 import {
   archiveSession,
   hideQuest,
+  loadArchivedSessions,
   loadHiddenQuests,
   resumeActiveSession,
   saveActiveSession,
@@ -90,6 +91,8 @@ function resolveCurrent(session: Session, outcome: Outcome, hidden: number[]): S
 export function useSession() {
   const [session, setSession] = useState<Session | null>(() => resumeActiveSession());
   const [hidden, setHidden] = useState<number[]>(() => loadHiddenQuests());
+  /** Solo para saber si mostrar el acceso al historial en la home. */
+  const [archivedCount, setArchivedCount] = useState(() => loadArchivedSessions().length);
 
   useEffect(() => {
     saveActiveSession(session);
@@ -146,6 +149,7 @@ export function useSession() {
     (feedback: NightFeedback | null) => {
       if (!session) return;
       archiveSession({ ...session, feedback, endedAt: session.endedAt ?? Date.now() });
+      setArchivedCount((n) => n + 1);
       setSession(null);
     },
     [session],
@@ -154,6 +158,7 @@ export function useSession() {
   return {
     session,
     currentQuest,
+    archivedCount,
     startNight,
     acceptQuest,
     skipQuest,

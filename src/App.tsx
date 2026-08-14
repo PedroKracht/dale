@@ -1,16 +1,20 @@
+import { useState } from 'react';
+import { History } from './components/History';
 import { Home } from './components/Home';
 import { QuestScreen } from './components/QuestScreen';
 import { Summary } from './components/Summary';
 import { useSession } from './lib/useSession';
 
 /**
- * Tres pantallas, sin router: la sesión guardada define dónde estás.
+ * Cuatro pantallas, sin router: la sesión guardada define dónde estás.
  * sin sesión -> home · sesión abierta -> quest · sesión cerrada -> resumen.
+ * El historial es lo único que se abre a mano, desde la home.
  */
 export default function App() {
   const {
     session,
     currentQuest,
+    archivedCount,
     startNight,
     acceptQuest,
     skipQuest,
@@ -21,7 +25,18 @@ export default function App() {
     closeNight,
   } = useSession();
 
-  if (!session) return <Home onStart={startNight} />;
+  const [showHistory, setShowHistory] = useState(false);
+
+  if (!session) {
+    if (showHistory) return <History onBack={() => setShowHistory(false)} />;
+    return (
+      <Home
+        onStart={startNight}
+        hasHistory={archivedCount > 0}
+        onOpenHistory={() => setShowHistory(true)}
+      />
+    );
+  }
 
   if (session.endedAt !== null) {
     return <Summary session={session} onClose={closeNight} />;

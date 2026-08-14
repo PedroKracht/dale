@@ -1,8 +1,11 @@
 type Props = {
   onStart: () => void;
+  /** Solo aparece si hay noches guardadas: la home arranca limpia. */
+  hasHistory: boolean;
+  onOpenHistory: () => void;
 };
 
-export function Home({ onStart }: Props) {
+export function Home({ onStart, hasHistory, onOpenHistory }: Props) {
   return (
     <div className="screen">
       <div className="topbar" />
@@ -20,6 +23,11 @@ export function Home({ onStart }: Props) {
         <button className="btn btn--primary" onClick={onStart}>
           Empezar noche
         </button>
+        {hasHistory && (
+          <button className="btn btn--quiet btn--centered" onClick={onOpenHistory}>
+            Noches anteriores
+          </button>
+        )}
       </div>
     </div>
   );

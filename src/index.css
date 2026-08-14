@@ -465,3 +465,69 @@ button {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- historial ---------- */
+
+.btn--centered {
+  align-self: center;
+}
+
+.history {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 24px 0 32px;
+}
+
+.night {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.night:last-child {
+  border-bottom: 0;
+}
+
+.night__date {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* La tira: lo que hiciste esa noche, en orden. Cada quest es un grupo aparte,
+   con hueco propio, para que se lea dónde termina una y empieza la otra. */
+.night__strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  font-size: 26px;
+  line-height: 1.3;
+}
+
+.night__count {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.night__empty {
+  font-size: 17px;
+  color: var(--text-faint);
+}
+
+.night__moment {
+  font-size: 18px;
+  line-height: 1.35;
+  color: var(--text-dim);
+  border-left: 2px solid var(--line);
+  padding-left: 13px;
+}

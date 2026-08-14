@@ -157,13 +157,33 @@ src/
 scripts/make-icons.mjs  genera los iconos PWA (npm run icons)
 ```
 
+## Historial
+
+Desde la home, **NOCHES ANTERIORES** (solo aparece cuando hay al menos una terminada).
+
+Cada noche se muestra como una tira de emojis de lo que completaste, en orden, con la
+fecha, el conteo y el momento que quisiste recordar. Nada más.
+
+No es un dashboard y no debería volverse uno: sin porcentajes, sin rachas, sin promedios,
+sin gráficos. Lo salteado, lo abandonado y lo descartado se sigue guardando —hace falta
+para leer los datos después— pero no se muestra: mirar para atrás no tiene que sentirse
+como un boletín.
+
+**COPIAR DATOS** saca el JSON crudo de todas las noches. Intenta el portapapeles y, si
+Safari lo niega (pasa cuando el documento no tiene foco), baja un archivo
+`dale-noches-AAAA-MM-DD.json`. Siempre pasa algo visible.
+
+Si borrás una quest del mazo, las noches viejas que la usaron no se rompen: desaparece de
+la tira y el conteo sigue siendo correcto.
+
 ## Qué guarda
 
 Nada sale del teléfono. En `localStorage`:
 
 - `dale.active-session.v1` — la noche en curso. Cerrar Safari de golpe no la pierde.
   Si quedó abierta más de 12 horas, se archiva sola y se arranca de cero.
-- `dale.sessions.v1` — las noches terminadas, con las respuestas del final.
+- `dale.sessions.v1` — las noches terminadas, con las respuestas del final. Es lo que
+  lee el historial.
 - `dale.hidden-quests.v1` — las quests descartadas con "no va".
 
 Para verlas, en la consola del navegador:
