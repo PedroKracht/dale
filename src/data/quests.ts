@@ -78,12 +78,19 @@ export function questEmoji(quest: Quest): string {
 export const QUESTS: Quest[] = [
   { id: 2, text: 'Cambiá de sector del boliche.', level: 0, category: 'presence', emoji: '🙂🚶' },
   { id: 3, text: 'Mirá alrededor y elegí quién parece estar pasándola mejor.', level: 0, category: 'presence', tags: ['observacion'] },
+  { id: 64, text: 'Date una vuelta completa por el boliche.', level: 0, category: 'presence', emoji: '😌🚶', seconds: 180 },
+  { id: 65, text: 'Buscá el lugar del boliche donde mejor se escucha.', level: 0, category: 'presence', emoji: '🧐🔊', seconds: 180 },
+  { id: 66, text: 'Contá cuántas personas ves con el teléfono en la mano.', level: 0, category: 'presence', emoji: '🤔📱', tags: ['observacion'] },
 
   { id: 4, text: 'Hacé contacto visual con alguien y sonreí.', level: 1, category: 'presence', emoji: '😊' },
   { id: 17, text: 'Inventá un paso de baile.', level: 1, category: 'movement', tags: ['baile'] },
   { id: 36, text: 'Copiá un paso de baile que veas.', level: 1, category: 'movement', tags: ['baile'] },
   { id: 37, text: 'Inventá un paso con alguien de tu grupo.', level: 1, category: 'movement', tags: ['baile', 'grupo'] },
   { id: 39, text: 'Sacá una foto espontánea de la gente con la que saliste.', level: 1, category: 'social', emoji: '😄📸', tags: ['foto', 'grupo'] },
+  // Un tema entero, igual que la 1.
+  { id: 67, text: 'Bailá un tema que no te guste.', level: 1, category: 'movement', emoji: '🙃🪩', tags: ['baile'], seconds: 300 },
+  { id: 68, text: 'Gritá cuando entre un tema que te guste.', level: 1, category: 'playful', emoji: '🤩📣', tags: ['condicional'], seconds: 180 },
+  { id: 69, text: 'Sacate una foto sin posar.', level: 1, category: 'playful', emoji: '😝📸', tags: ['foto'] },
 
   // Dura lo que dura un tema.
   { id: 1, text: 'Guardá el teléfono y bailá una canción completa.', level: 2, category: 'movement', emoji: '😌📵', tags: ['baile'], seconds: 300 },
