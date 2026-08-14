@@ -4,6 +4,9 @@ Quests. Una acción concreta por vez, sin explicaciones.
 
 v0.1: sin cuentas, sin backend, sin red. Todo local, todo offline.
 
+**En vivo: https://dale-woad.vercel.app** — abrila en Safari y agregala a la pantalla de
+inicio. Ahí sí corre el service worker, así que funciona sin señal.
+
 > Se llamó Bolichap y después Arranque. La carpeta todavía se llama `Bolichap`;
 > renombrarla es un `mv` cuando no tengas el server corriendo. Las noches guardadas con
 > los nombres viejos se mudan solas.
@@ -25,6 +28,20 @@ npm run build
 ```
 
 Queda todo en `dist/`. Para verlo servido: `npm run preview`.
+
+## Deploy
+
+El repo está conectado a Vercel: **cada push a `main` despliega solo**. No hace falta
+correr nada.
+
+Para publicar sin pasar por git:
+
+```bash
+npx vercel deploy --prod --yes
+```
+
+Ojo con la URL: Vercel genera tres. Las dos que llevan `krachtpedro-7806s-projects`
+están detrás del login de la cuenta y devuelven 302. La pública es `dale-woad`.
 
 ## Instalarlo en el iPhone
 
