@@ -47,6 +47,9 @@ export type Quest = {
 /** Estado de la quest que está en pantalla. */
 export type QuestState = 'proposed' | 'accepted';
 
+/** Cómo terminó una quest. */
+export type Outcome = 'completed' | 'skipped' | 'abandoned' | 'disliked';
+
 /** Quién usa este teléfono. Se pregunta una sola vez y solo sirve para etiquetar
  *  los datos al exportarlos: si prueban dos personas, los archivos se distinguen. */
 export type Player = {
@@ -78,6 +81,10 @@ export type Session = {
    *  las salteadas justo para no ensuciar ese dato: saltear es "acá no", esto es
    *  "esta quest está mal". */
   dislikedQuestIds: number[];
+  /** Los resultados en orden, el último al final. Los arrays de arriba dicen QUÉ
+   *  pasó con cada quest, pero no en qué orden: esto es lo que lee el selector
+   *  para saber cómo venís. */
+  outcomes: Outcome[];
   /** Todas las quests mostradas, en orden. La usa el selector para no repetir. */
   shownQuestIds: number[];
   feedback: NightFeedback | null;

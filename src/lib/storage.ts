@@ -142,5 +142,6 @@ export function resumeActiveSession(): Session | null {
     ...session,
     acceptedAt: session.acceptedAt ?? null,
     dislikedQuestIds: session.dislikedQuestIds ?? [],
+    outcomes: session.outcomes ?? [],
   };
 }

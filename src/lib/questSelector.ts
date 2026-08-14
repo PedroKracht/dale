@@ -1,4 +1,4 @@
-import type { Quest, QuestCategory } from '../types';
+import type { Outcome, Quest, QuestCategory } from '../types';
 import { QUESTS } from '../data/quests';
 
 /**
@@ -59,15 +59,61 @@ export type SelectionContext = {
   shownQuestIds: number[];
   /** Quests ya completadas, salteadas o abandonadas en esta sesión. */
   resolvedQuestIds: number[];
+  /** Cómo terminaron las últimas quests, en orden. Con esto se calcula el envión. */
+  recentOutcomes: Outcome[];
 };
 
-/**
- * Punto de extensión para el futuro (dificultad adaptativa, pesos por categoría,
- * quests que aparezcan más o menos). Hoy es neutro a propósito.
- */
 export type Bias = (quest: Quest, ctx: SelectionContext) => number;
 
-const neutralBias: Bias = () => 1;
+/**
+ * DIFICULTAD ADAPTATIVA
+ *
+ * Cuántos resultados miramos para atrás. Corto a propósito: la noche tiene que
+ * poder cambiar de humor en diez minutos, no arrastrar lo que pasó a las 2 AM.
+ */
+const MOMENTUM_WINDOW = 5;
+
+/**
+ * Cuánto mueve la aguja cada resultado.
+ *
+ * "No va" vale cero: descartar una quest habla de la quest, no de vos. Bajarte el
+ * nivel por eso sería castigarte por tener criterio.
+ */
+const OUTCOME_POINTS: Record<Outcome, number> = {
+  completed: 1,
+  skipped: -1,
+  abandoned: -0.5,
+  disliked: 0,
+};
+
+/** Nivel al que apunta la noche cuando no hay historia todavía. */
+const BASE_LEVEL = 2;
+/** Cuánto puede correrse ese nivel con el envión a favor o en contra. */
+const LEVEL_SWING = 1.8;
+/** Cuánto pierde una quest por cada nivel de distancia del objetivo.
+ *  Es un empujón, no un filtro: el azar tiene que seguir mandando.
+ *  Medido sobre el mazo actual: cumpliendo, la mitad de lo que sale es nivel 3+;
+ *  salteando, baja a menos de un cuarto. Apretar más no mueve mucho la aguja y
+ *  empieza a volver la noche predecible. */
+const LEVEL_FALLOFF = 0.45;
+
+function clamp(n: number, min: number, max: number): number {
+  return Math.min(Math.max(n, min), max);
+}
+
+/**
+ * Si venís salteando, baja. Si venís cumpliendo, sube. Nunca de golpe: cinco
+ * resultados seguidos en la misma dirección mueven el objetivo un nivel y medio.
+ */
+export const momentumBias: Bias = (quest, ctx) => {
+  const recientes = last(ctx.recentOutcomes, MOMENTUM_WINDOW);
+  if (recientes.length === 0) return 1;
+
+  const envion = recientes.reduce((a, o) => a + OUTCOME_POINTS[o], 0) / recientes.length;
+  const objetivo = clamp(BASE_LEVEL + envion * LEVEL_SWING, 0, 4);
+
+  return LEVEL_FALLOFF ** Math.abs(quest.level - objetivo);
+};
 
 function last<T>(arr: T[], n: number): T[] {
   return arr.slice(Math.max(0, arr.length - n));
@@ -141,7 +187,7 @@ export function pickQuest(
   ctx: SelectionContext,
   deck: Quest[] = QUESTS,
   random: () => number = Math.random,
-  bias: Bias = neutralBias,
+  bias: Bias = momentumBias,
 ): Quest | null {
   if (deck.length === 0) return null;
 

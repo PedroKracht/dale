@@ -134,6 +134,10 @@ export const QUESTS: Quest[] = [
   { id: 61, text: 'Decile a alguien con quien saliste algo que te guste de esa persona.', level: 3, category: 'compliment', emoji: '🥹✨', tags: ['grupo'] },
   { id: 62, text: 'Contale un chiste malo a alguien que no conozcas.', level: 3, category: 'playful', emoji: '😬🥁' },
   { id: 63, text: 'Sacate una foto con alguien que acabás de conocer.', level: 3, category: 'stranger', emoji: '🥳📸', tags: ['foto'] },
+  { id: 70, text: 'Arrancá un aplauso después de un temazo.', level: 3, category: 'playful', emoji: '😬👏', seconds: 180 },
+  { id: 71, text: 'Hacé el peor paso de baile que se te ocurra.', level: 3, category: 'movement', emoji: '😂🪩', tags: ['baile'] },
+  { id: 72, text: 'Preguntale a alguien de seguridad cuál fue la noche más rara que vio acá.', level: 3, category: 'conversation', emoji: '😅💬', tags: ['pregunta'], seconds: 180 },
+  { id: 73, text: 'Contale a alguien que no conozcas cuál es tu tema favorito de todos los tiempos.', level: 3, category: 'music', emoji: '😳🎵' },
 
   // Pedirlo es rápido; que te lo enseñen, no.
   { id: 16, text: 'Pedile a alguien que te enseñe un paso de baile.', level: 4, category: 'movement', emoji: '😅🪩', tags: ['baile'], seconds: 180 },

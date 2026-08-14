@@ -75,6 +75,27 @@ escalera vieja —construida sobre el rechazo romántico— cantar un estribillo
 un boliche lleno contaba como nivel 1, y 13 de las 16 quests más difíciles del mazo eran
 "acercate a alguien que te guste". Hoy son 6 de 19, y de las cuatro de nivel 4 hay una sola.
 
+## Dificultad adaptativa
+
+Si venís salteando, baja. Si venís cumpliendo, sube. Mira los **últimos 5 resultados**
+y corre un nivel objetivo alrededor del 2; después favorece las quests cercanas a ese
+objetivo. Es un empujón ponderado, no un filtro: el azar sigue mandando.
+
+Medido sobre el mazo actual, en 300 noches simuladas:
+
+| | nivel promedio | quests de nivel 3+ |
+|---|---|---|
+| Cumpliendo todo | 2,45 | 50% |
+| Salteando todo | 1,85 | 23% |
+| Descartando con "no va" | 2,11 | 30% |
+
+**"No va" no te baja el nivel** (`disliked` vale 0): descartar una quest habla de la
+quest, no de vos. Abandonar sí baja, pero la mitad que saltear.
+
+Todo se toca en `MOMENTUM_WINDOW`, `OUTCOME_POINTS`, `LEVEL_SWING` y `LEVEL_FALLOFF`
+en [`questSelector.ts`](src/lib/questSelector.ts). Subir el falloff a 0.6 la vuelve casi
+imperceptible; bajarlo de 0.45 no gana casi nada y empieza a volver la noche predecible.
+
 ## Editar las quests
 
 Todo el contenido vive en un solo archivo: [`src/data/quests.ts`](src/data/quests.ts).

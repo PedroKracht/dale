@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { NightFeedback, Quest, Session } from '../types';
+import type { NightFeedback, Outcome, Quest, Session } from '../types';
 import { QUESTS } from '../data/quests';
 import { pickQuest } from './questSelector';
 import {
@@ -12,8 +12,6 @@ import {
 } from './storage';
 
 /** Estado de la noche: una sola sesión activa por vez, persistida en localStorage. */
-
-type Outcome = 'completed' | 'skipped' | 'abandoned' | 'disliked';
 
 function newSessionId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -41,6 +39,7 @@ function withNextQuest(session: Session, hidden: number[]): Session {
     {
       shownQuestIds: session.shownQuestIds,
       resolvedQuestIds: resolvedIds(session),
+      recentOutcomes: session.outcomes,
     },
     visibleDeck(hidden),
   );
@@ -67,6 +66,7 @@ function createSession(hidden: number[]): Session {
       skippedQuestIds: [],
       abandonedQuestIds: [],
       dislikedQuestIds: [],
+      outcomes: [],
       shownQuestIds: [],
       feedback: null,
     },
@@ -79,7 +79,7 @@ function resolveCurrent(session: Session, outcome: Outcome, hidden: number[]): S
   const id = session.currentQuestId;
   if (id === null) return withNextQuest(session, hidden);
 
-  const next: Session = { ...session };
+  const next: Session = { ...session, outcomes: [...session.outcomes, outcome] };
   if (outcome === 'completed') next.completedQuestIds = [...session.completedQuestIds, id];
   else if (outcome === 'skipped') next.skippedQuestIds = [...session.skippedQuestIds, id];
   else if (outcome === 'abandoned') next.abandonedQuestIds = [...session.abandonedQuestIds, id];
