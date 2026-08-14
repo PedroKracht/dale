@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import type { Player } from './types';
+import { loadPlayer, savePlayer } from './lib/storage';
 import { History } from './components/History';
 import { Home } from './components/Home';
 import { QuestScreen } from './components/QuestScreen';
@@ -26,12 +28,24 @@ export default function App() {
   } = useSession();
 
   const [showHistory, setShowHistory] = useState(false);
+  /** `null` = nunca se preguntó el nombre. Se pregunta una vez y no vuelve. */
+  const [player, setPlayer] = useState<Player | null>(() => loadPlayer());
+
+  function handleStart(name: string | null) {
+    if (player === null) {
+      const nuevo = { name: (name ?? '').trim() };
+      savePlayer(nuevo);
+      setPlayer(nuevo);
+    }
+    startNight();
+  }
 
   if (!session) {
     if (showHistory) return <History onBack={() => setShowHistory(false)} />;
     return (
       <Home
-        onStart={startNight}
+        askName={player === null}
+        onStart={handleStart}
         hasHistory={archivedCount > 0}
         onOpenHistory={() => setShowHistory(true)}
       />

@@ -1,4 +1,4 @@
-import type { Session } from '../types';
+import type { Player, Session } from '../types';
 
 /**
  * Persistencia. Todo local, nada de red.
@@ -10,6 +10,8 @@ const ACTIVE_KEY = 'dale.active-session.v1';
 const ARCHIVE_KEY = 'dale.sessions.v1';
 /** Quests descartadas con "no va". Sobreviven a la noche: el mazo se hace personal. */
 const HIDDEN_KEY = 'dale.hidden-quests.v1';
+/** Quién usa este teléfono. Que la clave exista significa que ya se preguntó. */
+const PLAYER_KEY = 'dale.player.v1';
 
 /** Se llamó Bolichap y después Arranque. Lo guardado con esos nombres se muda solo. */
 const LEGACY_KEYS: Record<string, string> = {
@@ -83,6 +85,19 @@ export function archiveSession(session: Session): void {
   const all = loadArchivedSessions();
   all.push({ ...session, endedAt: session.endedAt ?? Date.now() });
   write(ARCHIVE_KEY, all);
+}
+
+/** `null` = todavía no se preguntó. Un nombre vacío es una respuesta válida:
+ *  significa que se preguntó y no quiso poner nada. */
+export function loadPlayer(): Player | null {
+  const value = read<unknown>(PLAYER_KEY);
+  if (typeof value !== 'object' || value === null) return null;
+  const name = (value as Partial<Player>).name;
+  return { name: typeof name === 'string' ? name : '' };
+}
+
+export function savePlayer(player: Player): void {
+  write(PLAYER_KEY, { name: player.name.trim().slice(0, 24) });
 }
 
 export function loadHiddenQuests(): number[] {

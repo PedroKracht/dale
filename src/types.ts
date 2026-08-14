@@ -47,6 +47,12 @@ export type Quest = {
 /** Estado de la quest que está en pantalla. */
 export type QuestState = 'proposed' | 'accepted';
 
+/** Quién usa este teléfono. Se pregunta una sola vez y solo sirve para etiquetar
+ *  los datos al exportarlos: si prueban dos personas, los archivos se distinguen. */
+export type Player = {
+  name: string;
+};
+
 export type NightFeedback = {
   /** ¿La app te hizo hacer algo que probablemente no habrías hecho? */
   didSomethingNew: boolean | null;

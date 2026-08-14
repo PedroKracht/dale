@@ -531,3 +531,43 @@ button {
   border-left: 2px solid var(--line);
   padding-left: 13px;
 }
+
+/* ---------- nombre ---------- */
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.who__label {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.name-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 2px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  color: var(--text);
+  font-family: var(--font-text);
+  /* 18px: por debajo de 16 iOS hace zoom al enfocar. */
+  font-size: 20px;
+  -webkit-appearance: none;
+}
+
+.name-input::placeholder {
+  color: var(--text-faint);
+}
+
+.name-input:focus {
+  outline: none;
+  border-bottom-color: var(--accent-bright);
+}

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { Session } from '../types';
 import { QUESTS, questEmoji } from '../data/quests';
-import { loadArchivedSessions } from '../lib/storage';
+import { loadArchivedSessions, loadPlayer, savePlayer } from '../lib/storage';
 
 /**
  * Las noches que ya pasaron.
@@ -15,6 +15,16 @@ import { loadArchivedSessions } from '../lib/storage';
 type Props = {
   onBack: () => void;
 };
+
+/** "fer" — para el nombre del archivo. */
+function slug(name: string): string {
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
 
 /** "sáb 13 ago · 02:14" — 24 horas, que es como se lee la hora acá. */
 function formatNight(startedAt: number): string {
@@ -70,12 +80,24 @@ export function History({ onBack }: Props) {
   // Más recientes arriba.
   const nights = useMemo(() => [...loadArchivedSessions()].reverse(), []);
   const [exportado, setExportado] = useState<'copiado' | 'bajado' | null>(null);
+  const [nombre, setNombre] = useState(() => loadPlayer()?.name ?? '');
+
+  function cambiarNombre(valor: string) {
+    setNombre(valor);
+    savePlayer({ name: valor });
+  }
 
   /** Saca los datos crudos de la app. Safari niega el portapapeles cuando el
    *  documento no tiene foco, así que si falla se baja un archivo: siempre
    *  tiene que pasar algo visible al tocar. */
   async function exportarDatos() {
-    const json = JSON.stringify(nights, null, 2);
+    // El archivo se describe a sí mismo: con dos personas probando, los dos
+    // exports se llamaban igual y no había forma de saber cuál era cuál.
+    const json = JSON.stringify(
+      { player: nombre.trim() || null, exportedAt: new Date().toISOString(), nights },
+      null,
+      2,
+    );
     let resultado: 'copiado' | 'bajado' = 'copiado';
 
     try {
@@ -84,7 +106,8 @@ export function History({ onBack }: Props) {
       const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
       const a = document.createElement('a');
       a.href = url;
-      a.download = `dale-noches-${new Date().toISOString().slice(0, 10)}.json`;
+      const quien = slug(nombre);
+      a.download = `dale-noches${quien ? '-' + quien : ''}-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
       resultado = 'bajado';
@@ -108,6 +131,18 @@ export function History({ onBack }: Props) {
       </div>
 
       <div className="history">
+        <label className="who">
+          <span className="who__label">Quién sos</span>
+          <input
+            className="name-input"
+            value={nombre}
+            onChange={(e) => cambiarNombre(e.target.value)}
+            placeholder="Sin nombre"
+            autoCapitalize="words"
+            maxLength={24}
+          />
+        </label>
+
         <h2 className="summary__title">
           {nights.length === 1 ? '1 noche' : `${nights.length} noches`}
         </h2>

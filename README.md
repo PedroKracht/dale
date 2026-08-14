@@ -169,9 +169,26 @@ sin gráficos. Lo salteado, lo abandonado y lo descartado se sigue guardando —
 para leer los datos después— pero no se muestra: mirar para atrás no tiene que sentirse
 como un boletín.
 
-**COPIAR DATOS** saca el JSON crudo de todas las noches. Intenta el portapapeles y, si
-Safari lo niega (pasa cuando el documento no tiene foco), baja un archivo
-`dale-noches-AAAA-MM-DD.json`. Siempre pasa algo visible.
+**COPIAR DATOS** saca el JSON crudo. Intenta el portapapeles y, si Safari lo niega (pasa
+cuando el documento no tiene foco), baja un archivo. Siempre pasa algo visible.
+
+El archivo se describe a sí mismo:
+
+```json
+{ "player": "Fer", "exportedAt": "2026-08-14T01:17:00.000Z", "nights": [ ... ] }
+```
+
+## Quién sos
+
+La primera vez —y solo la primera— la home muestra un campo de nombre arriba del botón.
+No bloquea nada: si tocás EMPEZAR NOCHE sin escribir, se guarda vacío y no vuelve a
+preguntar. Después la home queda limpia para siempre.
+
+Se edita desde el historial, arriba de todo.
+
+Solo sirve para etiquetar los datos. Va adentro del JSON y en el nombre del archivo
+(`dale-noches-fer-2026-08-14.json`), así dos personas probando en paralelo pueden juntar
+los exports sin confundirlos. No se muestra en ninguna parte de la noche.
 
 Si borrás una quest del mazo, las noches viejas que la usaron no se rompen: desaparece de
 la tira y el conteo sigue siendo correcto.
@@ -185,6 +202,7 @@ Nada sale del teléfono. En `localStorage`:
 - `dale.sessions.v1` — las noches terminadas, con las respuestas del final. Es lo que
   lee el historial.
 - `dale.hidden-quests.v1` — las quests descartadas con "no va".
+- `dale.player.v1` — el nombre. Que la clave exista significa que ya se preguntó.
 
 Para verlas, en la consola del navegador:
 
