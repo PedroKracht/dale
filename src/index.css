@@ -1,0 +1,471 @@
+:root {
+  /* Soft autumn: cálido, terroso y desaturado. Nada de blanco puro ni negro plano.
+     El frío (violeta, azul) sobre negro lee solitario y de pantalla; esto lee
+     lámpara de bar, que es donde estás. Los acentos son barro y camel, no neón. */
+  --bg: #17120e;
+  --bg-glow: #31241a;
+  --surface: rgba(255, 238, 214, 0.05);
+  --text: #ece0cd;
+  --text-dim: #a2917c;
+  --text-faint: #79695a;
+  --line: rgba(255, 238, 214, 0.12);
+  --accent: #c07a55;
+  --accent-bright: #d9a273;
+  /* Ladrillo: marca y urgencia. Es emphasis, no alarma. */
+  --brick: #c25a45;
+  /* Salvia: el único frío de la paleta, reservado para la confirmación. */
+  --accent-soft: #93a06d;
+  --on-accent: #1a120c;
+
+  /* Dos tipografías del sistema, cero descargas, cero red: en iPhone salen
+     New York y SF Mono. Serif para lo que leés, mono para los controles. */
+  --font-text: ui-serif, 'New York', Georgia, 'Times New Roman', serif;
+  --font-ui: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  --tap: 66px;
+  --gutter: 22px;
+
+  color-scheme: dark;
+  font-family: var(--font-text);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* El resplandor de fondo evita que la pantalla sea un rectángulo negro muerto. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(90% 55% at 50% -10%, var(--bg-glow) 0%, transparent 70%),
+    radial-gradient(70% 40% at 50% 115%, rgba(192, 122, 85, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Grano de papel. Es lo que separa "fondo oscuro" de "tinta sobre algo".
+   SVG inline, así que no pide red ni rompe el offline. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+
+button,
+textarea {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* ---------- layout ---------- */
+
+.screen {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding:
+    calc(env(safe-area-inset-top) + 14px)
+    calc(env(safe-area-inset-right) + var(--gutter))
+    calc(env(safe-area-inset-bottom) + 18px)
+    calc(env(safe-area-inset-left) + var(--gutter));
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.screen--scroll {
+  user-select: auto;
+  -webkit-user-select: auto;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 40px;
+  flex: 0 0 auto;
+}
+
+.stage {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 12px 0 24px;
+  min-height: 0;
+}
+
+.actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/* ---------- marca ---------- */
+
+.wordmark {
+  font-size: clamp(56px, 19vw, 88px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-indent: 0.05em;
+  line-height: 1;
+  text-align: center;
+}
+
+.wordmark__dot {
+  display: inline-block;
+  width: 0.16em;
+  height: 0.16em;
+  margin-left: 0.02em;
+  border-radius: 50%;
+  background: var(--accent-bright);
+  vertical-align: baseline;
+}
+
+.tagline {
+  font-family: var(--font-ui);
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ---------- quest ---------- */
+
+.quest {
+  font-size: clamp(28px, 7.6vw, 42px);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.008em;
+  text-align: center;
+  text-wrap: balance;
+  max-width: 20ch;
+  animation: quest-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.quest--accepted {
+  color: #fdf6ea;
+}
+
+.quest__emoji {
+  font-size: clamp(36px, 10vw, 48px);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  animation: emoji-in 380ms cubic-bezier(0.22, 1.4, 0.4, 1);
+}
+
+@keyframes emoji-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- cuenta regresiva ---------- */
+
+.timer {
+  font-family: var(--font-ui);
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--brick);
+  animation: quest-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* En cero no pasa nada: el número se apaga y se queda ahí. */
+.timer--expired {
+  color: var(--text-faint);
+}
+
+/* Barra que drena en el borde superior de la pantalla. */
+.drain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 2px;
+  background: var(--brick);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+@keyframes quest-in {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- botones ---------- */
+
+.btn {
+  font-family: var(--font-ui);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  padding: 0 20px;
+  border-radius: 17px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  transition:
+    transform 90ms ease,
+    opacity 120ms ease,
+    background-color 120ms ease;
+}
+
+.btn:active {
+  transform: scale(0.975);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+}
+
+.btn--primary {
+  background: var(--accent-bright);
+  color: var(--on-accent);
+  box-shadow: 0 10px 34px -18px var(--accent-bright);
+}
+
+.btn--ghost {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text-dim);
+}
+
+.btn--quiet {
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text-faint);
+}
+
+/* ---------- confirmación de HECHO ---------- */
+
+.flash {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 16, 13, 0.85);
+  backdrop-filter: blur(2px);
+  animation: flash-in 120ms ease-out;
+}
+
+.flash__ring {
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-soft);
+  animation: ring 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes flash-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ring {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  35% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+/* ---------- resumen ---------- */
+
+.summary {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 28px 0 32px;
+}
+
+.summary__title {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.counts {
+  display: flex;
+  gap: 34px;
+  margin-top: 16px;
+}
+
+.count__value {
+  font-family: var(--font-ui);
+  font-variant-numeric: tabular-nums;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.count__label {
+  font-family: var(--font-ui);
+  margin-top: 7px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.question {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.question__text {
+  font-size: 17px;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.chips {
+  display: flex;
+  gap: 10px;
+}
+
+.chip {
+  font-family: var(--font-ui);
+  flex: 1;
+  min-height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text-dim);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    transform 90ms ease,
+    border-color 120ms ease,
+    background-color 120ms ease;
+}
+
+.chip:active {
+  transform: scale(0.975);
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--accent-bright);
+  background: rgba(217, 162, 115, 0.2);
+  color: var(--text);
+}
+
+.field {
+  width: 100%;
+  min-height: 108px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  font-size: 17px;
+  line-height: 1.4;
+  resize: none;
+}
+
+.field::placeholder {
+  color: var(--text-faint);
+}
+
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
